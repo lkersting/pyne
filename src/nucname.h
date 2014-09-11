@@ -506,6 +506,32 @@ namespace nucname
   int alara_to_id(std::string nuc);
   /// \}
 
+  /// \name FACEMC Form Functions
+  /// \{
+  /// This is the string-based naming convention used by the FACEMC code.
+  /// The FACEMC naming convention is similar to name form, but followed by an 
+  /// underscore, the absolute temperature and a K for Kelvin. Additionally, the
+  /// dash is always present and the the meta-stable flag is lowercase.  
+  /// For instance, ‘H-1_293.6K’ and ‘Am-242m_293.6K’ are the valid FACEMC 
+  /// notation for these nuclides.
+  /// \param nuc a nuclide
+  /// \return a string nuclide identifier.
+  int facemc(int nuc);
+  int facemc(char * nuc);
+  int facemc(std::string nuc);
+  /// \}
+
+  /// \name FACEMC Form to Identifier Form Functions
+  /// \{
+  /// This converts from the FACEMC nuclide naming convention 
+  /// to the id canonical form  for nuclides in PyNE. 
+  /// \param nuc a nuclide in FACEMC form.
+  /// \return an integer id nuclide identifier.
+  int facemc_to_id(int nuc);
+  int facemc_to_id(char * nuc);
+  int facemc_to_id(std::string nuc);
+  /// \}
+
   /// \name SZA Form Functions
   /// \{
   /// This is the new format for ACE data tables in the form SSSZZZAAA.
