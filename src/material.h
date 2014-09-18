@@ -67,7 +67,7 @@ namespace pyne
     /// \param d density value
     /// \param apm atoms per mole
     /// \param attributes initial metadata
-    Material(comp_map cm, double m=-1.0, double d=-1.0, double apm=-1.0,
+    Material(comp_map cm, double m=-1.0, double d=-1.0, double apm=-1.0, double temp=293.6,
              Json::Value attributes=Json::Value(Json::objectValue));
     /// Constructor from file
     /// \param filename path to file on disk, this file may be either in plaintext
@@ -81,7 +81,7 @@ namespace pyne
     ///          may be overridden by the value from disk.
     /// \param attributes initial metadata,
     ///          may be overridden by the value from disk.
-    Material(char * filename, double m=-1.0, double d=-1.0, double apm=-1.0,
+    Material(char * filename, double m=-1.0, double d=-1.0, double apm=-1.0, double temp=293.6,
              Json::Value attributes=Json::Value(Json::objectValue));
     /// Constructor from file
     /// \param filename path to file on disk, this file may be either in plaintext
@@ -95,7 +95,7 @@ namespace pyne
     ///          may be overridden by the value from disk.
     /// \param attributes initial metadata,
     ///          may be overridden by the value from disk.
-    Material(std::string filename, double m=-1.0, double d=-1.0, double apm=-1.0,
+    Material(std::string filename, double m=-1.0, double d=-1.0, double apm=-1.0, double temp=293.6,
              Json::Value attributes=Json::Value(Json::objectValue));
     ~Material (); ///< default destructor
 
@@ -209,6 +209,7 @@ namespace pyne
     double mass;  ///< mass (in arbitrary units) of the Material.
     double density; ///< density (in arbitrary units) of the Material.
     double atoms_per_molecule; ///< The number of atoms per molecule.
+    double temp; ///< The temperature of cross section data
     /// container for arbitrary metadata, following the JSON rules.
     Json::Value metadata;
 
@@ -334,6 +335,7 @@ namespace pyne
     double mass;  ///< material mass
     double density; ///< material density
     double atoms_per_mol; ///< material atoms per mole
+    double temp; ///< cross section temperature
     double comp []; ///< array of material composition mass weights.
   } material_data;
 
