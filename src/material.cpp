@@ -626,13 +626,13 @@ std::string pyne::Material::facemc(std::string frac_type, int id) {
   // print first isotope
   int facemc_id;
   facemc_id = pyne::nucname::facemc(i->first );
-  oss << " ," << mcnp_id << "_" << metadata["temp"].asString();
+  oss << " ," << mcnp_id << "_" << metadata["temp"].asString() << "K";
 
   // iterate through the rest of the isotopes
   for(pyne::comp_iter i = fracs.begin()+1; i != fracs.end(); ++i) {
     int facemc_id;
     facemc_id = pyne::nucname::facemc(i->first );
-    oss << " ," << mcnp_id << "_" << metadata["temp"].asString();
+    oss << " ," << mcnp_id << "_" << metadata["temp"].asString() << "K";
     }
 
   oss << << "}\"/>" << std:endl << "  </ParameterList>";
