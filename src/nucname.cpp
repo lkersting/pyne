@@ -1323,7 +1323,7 @@ std::string pyne::nucname::facemc(int nuc) {
 
   // Add meta-stable flag
   if (0 < ssss)
-    newnuc += "m";
+    newnuc += "-m";
 
   return newnuc;
 };

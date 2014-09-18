@@ -575,6 +575,95 @@ std::string pyne::Material::mcnp(std::string frac_type) {
   return oss.str();
 }
 
+std::string pyne::Material::mcnp(std::string frac_type) {
+  //////////////////// Begin card creation ///////////////////////
+  std::ostringstream oss;
+  // 'name'
+  if (metadata.isMember("name")) {
+    oss << "C name: " << metadata["name"].asString() << std::endl;
+  }
+  // 'density'
+  if (density != -1.0) {
+     std::stringstream ds;
+     ds << std::setprecision(1) << std::fixed << "C density = " << density << std::endl;
+     oss << ds.str();
+  }
+  // 'source'
+  if (metadata.isMember("source")) {
+     oss << "C source: " << metadata["source"].asString() << std::endl;
+  }
+  // Metadata comments
+  if (metadata.isMember("comments")) {
+    std::string comment_string = "comments: " + metadata["comments"].asString();
+    // Include as is if short enough
+    if (comment_string.length() <= 77) {
+      oss << "C " << comment_string << std::endl;
+    }
+    else { // otherwise create a remainder string and iterate/update it
+      oss << "C " << comment_string.substr(0,77) << std::endl;
+      std::string remainder_string = comment_string.substr(77);
+      while (remainder_string.length() > 77) {
+        oss << "C " << remainder_string.substr(0,77) << std::endl;
+        remainder_string.erase(0,77);
+      }
+      if (remainder_string.length() > 0) {
+        oss << "C " << remainder_string << std::endl;
+      }
+    }
+  }
+
+  // Metadata mat_num
+  oss << "m";
+  if (metadata.isMember("mat_number")) {
+    int mat_num = metadata["mat_number"].asInt();
+    oss << mat_num << std::endl;
+  } else {
+    oss << "?" << std::endl;
+  }
+
+  // Set up atom or mass frac map
+  std::map<int, double> fracs;
+  std::string frac_sign;
+
+  if ("atom" == frac_type) {
+    fracs = to_atom_frac();
+    frac_sign = "";
+  } else {
+    fracs = comp;
+    frac_sign = "-";
+  }
+
+  // iterate through frac map
+  // This is an awkward pre-C++11 way to put an int to a string
+  std::stringstream ss;
+  std::string nucmcnp;
+  std::string table_item;
+  for(pyne::comp_iter i = fracs.begin(); i != fracs.end(); ++i) {
+    // Clear first
+    ss.str(std::string() );
+    ss.str("");
+    ss << pyne::nucname::mcnp(i->first );
+    nucmcnp = ss.str();
+
+    int mcnp_id;
+    mcnp_id = pyne::nucname::mcnp(i->first );
+    // Spaces are important for tests
+    table_item = metadata["table_ids"][nucmcnp].asString();
+    if ( !table_item.empty() ) {
+      oss << "     " << mcnp_id << "." << table_item << " ";
+    } else {
+      oss << "     " << mcnp_id << " ";
+    }
+    // The int needs a little formatting
+    std::stringstream fs;
+    fs << std::setprecision(4) << std::scientific << frac_sign << i->second \
+       << std::endl;
+    oss << fs.str();
+  }
+
+  return oss.str();
+}
+
 ///---------------------------------------------------------------------------//
 /// Create a set out of the static string array. 
 std::set<std::string> fluka_builtin(pyne::fluka_mat_strings, 
